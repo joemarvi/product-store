@@ -1,1 +1,6 @@
-<p>create works!</p>
+<form [formGroup]="form" (ngSubmit)="onSubmit()" >
+    <mat-label>Input</mat-label>
+    <input type="text" formControlName="title" placeholder="Título">
+
+    <button type="submit">Salvar</button>
+</form>
