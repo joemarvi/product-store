@@ -1,7 +1,6 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, Inject} from '@angular/core';
-import { Observable } from 'rxjs';
-import { Products } from '../../models';
+
+import { Component, inject } from '@angular/core';
+import { ProductsService } from '../../shared/services/products.service';
 
 @Component({
   selector: 'app-list',
@@ -13,13 +12,11 @@ import { Products } from '../../models';
 export class ListComponent {
   products: any[] = [];
 
-  // httpClient = Inject(HttpClient);
-
-  constructor(private httpClient: HttpClient){}
+  productsService = inject(ProductsService);
 
   ngOnInit() {
-    this.httpClient.get<any>('/api/products').subscribe((products) => {
-      this.products = this.products;
-    });
+    this.productsService.getAll().subscribe((products: any[]) => {
+      this.products = products;
+    })
   }
 }

@@ -1,8 +1,13 @@
 {
-    "produts": [
+    "products": [
         {
             "id": "1",
             "title": "Produto de teste"
+        },
+        {
+            "id": "2",
+            "title": "Produto de teste 02"
         }
+
     ]
 }
