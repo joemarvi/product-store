@@ -4,36 +4,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { CardComponent } from './components/card/card.component';
 import { Router, RouterLink } from '@angular/router';
 import { Product } from '../../shared/interfaces/products.interfaces';
+import { filter } from 'rxjs';
 import {
-  MatDialog,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
-
-@Component({
-  selector: 'app-confirmation-dialog',
-  template: `
-    <h2 mat-dialog-title>Deletar Produto</h2>
-    <mat-dialog-content> Deseja excluir este produto? </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button (click)="onNo()">Não</button>
-      <button mat-raised-button (click)="onYes()" color="primary" cdkFocusInitial>Sim</button>
-    </mat-dialog-actions>
-  `,
-  standalone: true,
-  imports: [MatButtonModule, MatDialogModule],
-})
-export class ConfirmationDialogComponent {
-  matDialogRef = inject(MatDialogRef);
-
-  onNo() {
-    this.matDialogRef.close(false);
-  }
-
-  onYes() {
-    this.matDialogRef.close(true);
-  }
-}
+  ConfirmationDialogService,
+} from '../../shared/services/confirmation-dialog.service';
 @Component({
   selector: 'app-list',
   standalone: true,
@@ -45,7 +19,7 @@ export class ListComponent {
   products: any[] = [];
   productsService = inject(ProductsService);
   router = inject(Router);
-  matDialog = inject(MatDialog);
+  confirmationDialogService = inject(ConfirmationDialogService);
 
   ngOnInit() {
     this.productsService.getAll().subscribe((products: any[]) => {
@@ -57,11 +31,15 @@ export class ListComponent {
     this.router.navigate(['/edit-product', product.id]);
   }
   onDelete(product: Product) {
-    this.matDialog
-      .open(ConfirmationDialogComponent)
-      .afterClosed()
-      .subscribe((answer: boolean) => {
-        console.log('afterClosed', answer);
+    this.confirmationDialogService
+      .openDialog()
+      .pipe(filter((answer) => answer === true))
+      .subscribe(() => {
+        this.productsService.delete(product.id).subscribe(() => {
+          this.productsService.getAll().subscribe((products: any[]) => {
+            this.products = products;
+          });
+        });
       });
   }
 }
