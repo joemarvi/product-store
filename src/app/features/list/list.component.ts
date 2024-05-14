@@ -4,6 +4,7 @@ import { ProductsService } from '../../shared/services/products.service';
 import { MatButtonModule } from '@angular/material/button'
 import { CardComponent } from './components/card/card.component';
 import { Router, RouterLink } from '@angular/router';
+import { Product } from '../../shared/interfaces/products.interfaces';
 
 @Component({
   selector: 'app-list',
@@ -24,7 +25,7 @@ import { Router, RouterLink } from '@angular/router';
       })
     }
 
-    OnEdit() {
-      this.router.navigateByUrl('/edit-product');
+    OnEdit(product: Product) {
+      this.router.navigate(['/edit-product', product.id]);
     }
   }
