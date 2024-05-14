@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, EventEmitter, Output, inject, input, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -27,6 +27,8 @@ export class FormComponent {
 
   form!: FormGroup;
 
+  @Output() submit = new EventEmitter<Product>();
+
   ngOnInit(): void {
     this.form = new FormGroup({
       title: new FormControl<string>(this.product()?.title ?? '', {
@@ -34,5 +36,9 @@ export class FormComponent {
         validators: Validators.required,
       }),
     });
+  }
+  onSubmit() {
+    const product = this.form.value as Product;
+    this.submit.emit(product);
   }
 }
