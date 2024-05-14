@@ -13,18 +13,27 @@ import {
 @Component({
   selector: 'app-confirmation-dialog',
   template: `
-    <h2 mat-dialog-title>Delete File</h2>
-    <mat-dialog-content> Would you like to delete ? </mat-dialog-content>
-    <mat-dialog-actions>
-      <button mat-button mat-dialog-close>No</button>
-      <button mat-button mat-dialog-close cdkFocusInitial>Ok</button>
+    <h2 mat-dialog-title>Deletar Produto</h2>
+    <mat-dialog-content> Deseja excluir este produto? </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="onNo()">Não</button>
+      <button mat-raised-button (click)="onYes()" color="primary" cdkFocusInitial>Sim</button>
     </mat-dialog-actions>
   `,
   standalone: true,
   imports: [MatButtonModule, MatDialogModule],
 })
-export class ConfirmationDialogComponent {}
+export class ConfirmationDialogComponent {
+  matDialogRef = inject(MatDialogRef);
 
+  onNo() {
+    this.matDialogRef.close(false);
+  }
+
+  onYes() {
+    this.matDialogRef.close(true);
+  }
+}
 @Component({
   selector: 'app-list',
   standalone: true,
@@ -51,8 +60,8 @@ export class ListComponent {
     this.matDialog
       .open(ConfirmationDialogComponent)
       .afterClosed()
-      .subscribe((data) => {
-        console.log('afterClosed', data);
+      .subscribe((answer: boolean) => {
+        console.log('afterClosed', answer);
       });
   }
 }
