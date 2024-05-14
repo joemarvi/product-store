@@ -25,9 +25,9 @@ export class EditComponent {
   product: Product = inject(ActivatedRoute).snapshot.data['product'];
 
   onSubmit(product: Product) {
-    this.productsService.post(product).subscribe(() => {
+    this.productsService.put(this.product.id, product).subscribe(() => {
       this.matSnackBar.open('Produto atualizado com sucesso!', 'Ok')
-      this.router.navigate(['/list']);
+      this.router.navigateByUrl('/');
     });
   }
 }
